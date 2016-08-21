@@ -163,7 +163,6 @@ def main():
 		sentences = summary.getSentence(i)
 		dtm = summary.getDTM(sentences, mode='CountVectorizer', binaryMode=True)
 		u, sigma, vt = summary.getSVD(dtm, sentences)
-		summary.getSummary(sigma=sigma, vt=vt.tolist(), approach='GongLiu')
 		
 		#menampilkan hasil summary
 		keys = summary.getSummary(sigma=sigma, vt=vt.tolist(), approach='cross').keys()
