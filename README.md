@@ -1,2 +1,2 @@
 # summarization
-Automatic Extractive Summarization based on LSA
+Automatic Extractive text Summarization based on LSA
