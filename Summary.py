@@ -56,7 +56,7 @@ class  Summary:
 		dtm_lsa = Normalizer(copy=False).fit_transform(dtm_lsa)
 		u = lsa.components_
 		sigma = lsa.explained_variance_ratio_
-		vt = dtm_lsa
+		vt = dtm_lsa.T
 		return u, sigma, vt
 
 
