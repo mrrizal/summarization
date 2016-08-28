@@ -56,7 +56,7 @@ class  Summary:
 		dtm_lsa = Normalizer(copy=False).fit_transform(dtm_lsa)
 		u = lsa.components_
 		sigma = lsa.explained_variance_ratio_
-		vt = dtm_lsa
+		vt = dtm_lsa.T
 		return u, sigma, vt
 
 
@@ -112,6 +112,22 @@ class  Summary:
 					value[data.index(max(data))] = max(data)
 					data[data.index(max(data))] = 0
 
+
+			elif approach == 'SteinbergerJezek2':
+				MIN_DIMENSIONS = 3
+				REDUCTION_RATIO = 1/1
+				dimensions = max(MIN_DIMENSIONS,int(len(sigma)*REDUCTION_RATIO))
+				powered_sigma = tuple(s**2 if i < dimensions else 0.0 for i, s in enumerate(sigma))
+				data = []
+
+				for column_vector in vt:
+					tmp = sum(s*v**2 for s, v in zip(powered_sigma, column_vector))
+					data.append(math.sqrt(tmp))
+				
+				for i in range(self.aspectRatio): 
+					value[data.index(max(data))] = max(data)
+					data[data.index(max(data))] = 0
+
 			#metode cross 
 			elif approach == 'cross':
 				lengthOfSentences = [0 for i in range(len(vt))]
@@ -161,11 +177,11 @@ def main():
 
 	for i in paragraph:
 		sentences = summary.getSentence(i)
-		dtm = summary.getDTM(sentences, mode='CountVectorizer', binaryMode=True)
+		dtm = summary.getDTM(sentences, mode='TfidfVectorizer')
 		u, sigma, vt = summary.getSVD(dtm, sentences)
 		
 		#menampilkan hasil summary
-		keys = summary.getSummary(sigma=sigma, vt=vt.tolist(), approach='cross').keys()
+		keys = summary.getSummary(sigma=sigma, vt=vt.tolist(), approach='SteinbergerJezek').keys()
 		summaryResult = [sentences[key] for key in keys]
 		print(' '.join(summaryResult))
 
@@ -181,3 +197,4 @@ def main():
 
 if __name__ == "__main__":
 	main()	
+
