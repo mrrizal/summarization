@@ -40,9 +40,9 @@ class  Summary:
 	'''
 	def getDTM(self, sentences, binaryMode=False, mode='CountVectorizer'):
 		if(mode=='CountVectorizer'):
-			self.vectorize = CountVectorizer(min_df=1, analyzer=self.stemmed_words, binary=binaryMode)
+			self.vectorize = CountVectorizer(min_df=0.0, analyzer=self.stemmed_words, binary=binaryMode, max_df=1.0)
 		elif(mode=='TfidfVectorizer'):
-			self.vectorize = TfidfVectorizer(min_df=1, analyzer=self.stemmed_words)
+			self.vectorize = TfidfVectorizer(min_df=0.0, analyzer=self.stemmed_words, max_df=1.0)
 		
 		dtm = self.vectorize.fit_transform(sentences)
 		#print(pd.DataFrame(dtm.toarray(), index=sentences, columns=self.vectorize.get_feature_names()))
@@ -79,7 +79,7 @@ class  Summary:
 				
 		self.aspectRatio = int((aspectRatio/100)*len(vt))
 
-		if(len(vt)>2):
+		if(len(vt)>3):
 			#metode milik Gong dan Liu
 			if approach == 'GongLiu':
 				#banyaknya kalimat yang di ambil
@@ -153,6 +153,7 @@ class  Summary:
 
 		else:
 			value[0] = 0
+			value[1] = 0
 
 		return value
 
@@ -169,7 +170,7 @@ class  Summary:
 		
 #main program
 def main():
-	file = open('sample_plain_text.txt', 'r')
+	file = open('sample_plain_text_3.txt', 'r')
 	data = file.read()
 
 	summary = Summary()
@@ -177,13 +178,21 @@ def main():
 
 	for i in paragraph:
 		sentences = summary.getSentence(i)
-		dtm = summary.getDTM(sentences, mode='TfidfVectorizer')
+		dtm = summary.getDTM(sentences, mode='CountVectorizer')
 		u, sigma, vt = summary.getSVD(dtm, sentences)
 		
 		#menampilkan hasil summary
-		keys = summary.getSummary(sigma=sigma, vt=vt.tolist(), approach='SteinbergerJezek').keys()
-		summaryResult = [sentences[key] for key in keys]
-		print(' '.join(summaryResult))
+		keys = summary.getSummary(sigma=sigma, vt=vt.tolist(), approach='SteinbergerJezek2').keys()
+		keys = sorted(keys)
+		summaryResult = []
+		for key in keys:
+			try:
+				summaryResult.append(sentences[key])
+			except:
+				pass
+
+		for i in summaryResult:
+			print(i)
 
 		'''
 		menampilkan hasil evaluasi(lsa-based)

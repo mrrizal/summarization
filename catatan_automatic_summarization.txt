@@ -1,0 +1,7 @@
+min_df=1, max_df abaikan ---> kayanya ga bener nih
+kalo per paragraph menurut ane yang baik adalah : countvectorizer, binarymode=True, metode cross
+kalo seluruh document : countvectorizer, binarymode=false, metode = SteinbergerJezek2
+
+//terbaru gan meringkas dengan keseluruhan isi document
+countvectorizer, binarymode=false, metode = SteinbergerJezek2, min_df=0.0, max_df=1.0
+ 
