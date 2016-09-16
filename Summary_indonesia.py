@@ -5,7 +5,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
 from sklearn.preprocessing import Normalizer
 import pandas as pd
-from numpy import linalg, sqrt
+from numpy import linalg, sqrt, absolute
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 # from stem import IndonesianStemmer 
 
@@ -192,7 +192,7 @@ def main():
 	u, sigma, vt = summary.getSVD(dtm, sentences)
 	
 	# menampilkan hasil summary
-	keys = summary.getSummary(sigma=sigma, vt=vt.tolist(), approach='SteinbergerJezek2').keys()
+	keys = summary.getSummary(sigma=absolute(sigma), vt=absolute(vt).tolist(), approach='cross').keys()
 	keys = sorted(keys)
 	summaryResult = []
 	for key in keys:
